@@ -8,7 +8,7 @@ export class ServerBoostrap{
         this.app=app;
     }
     init():Promise<boolean>{
-        return new Promise((resolve, rejects) =>{
+        return new Promise(() =>{
 
             const server = http.createServer(this.app);
             const PORT = process.env.PORT || 4000;
