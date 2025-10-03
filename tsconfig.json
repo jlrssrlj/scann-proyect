@@ -1,15 +1,30 @@
 {
+  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    "target": "es2022",
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
-    "strict": true,
+
+    // Environment Settings
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "strict": true,
+
+    // Skip type checks for node_modules
     "skipLibCheck": true
   },
-  "include": ["src"],
+  "include": ["src/**/*", "src/index.ts"],
   "exclude": ["node_modules", "dist"]
 }
