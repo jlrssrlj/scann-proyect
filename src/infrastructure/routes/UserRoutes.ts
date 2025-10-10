@@ -12,7 +12,7 @@ const userController = new UserController(userAppservice);
 
 //Ruta de manejo de errores
 
-router.post("/user", async(req, res) =>{
+router.post("/users", async(req, res) =>{
     try {
         await userController.createUser(req, res);
     } catch (error) {
@@ -20,7 +20,7 @@ router.post("/user", async(req, res) =>{
         
     }
 });
-router.get("/user", async(req, res) =>{
+router.get("/users", async(req, res) =>{
     try {
         await userController.getAllUsers(req, res);
     } catch (error) {
@@ -28,7 +28,7 @@ router.get("/user", async(req, res) =>{
         
     }
 });
-router.get("/user/:id", async(req, res) =>{
+router.get("/users/:id", async(req, res) =>{
     try {
         await userController.getUserByid(req, res);
     } catch (error) {
@@ -37,7 +37,7 @@ router.get("/user/:id", async(req, res) =>{
     }
 });
 
-router.get("/user-email/:email", async(req, res) =>{
+router.get("/users-email/:email", async(req, res) =>{
     try {
         await userController.getUserByEmail(req, res);
     } catch (error) {
@@ -45,7 +45,7 @@ router.get("/user-email/:email", async(req, res) =>{
         
     }
 });
-router.delete("/user/:id", async (req, res) => {
+router.delete("/users/:id", async (req, res) => {
     try {
         await userController.deleteUser(req, res);
     } catch (error) {

@@ -81,15 +81,15 @@ export class UserAdapter implements UserPort{
         }
     }
     async deleteUser(id: number): Promise<boolean> {
-        try {
-            const result = await this.userRepository.delete(id)
-            return result.affected ! == 0;
-        } catch (error) {
-            console.error("Error eliminando usuario");
-            throw new Error("Error deliting user");
-            
-        }
+    try {
+        const result = await this.userRepository.delete({ id_users: id });
+        return result.affected !== 0;
+    } catch (error) {
+        console.error("Error eliminando usuario:", error);
+        throw new Error("Error deleting user");
     }
+}
+
     async getAllUser(): Promise<userDomain[]> {
         try {
             const users = await this.userRepository.find();

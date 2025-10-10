@@ -10,7 +10,7 @@ export class UserController {
     }
 
     async createUser(req: Request, res: Response): Promise<Response> {
-        const { name, email, password } = req.body;
+        const { name, email, password_hash } = req.body;
 
         try {
             const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)?$/;
@@ -18,11 +18,11 @@ export class UserController {
                 return res.status(400).json({ message: "Nombre no válido" });
             }
 
-            if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email.trim())) {
                 return res.status(400).json({ error: "Correo no válido" });
             }
 
-            if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.,_-]{6,25}$/.test(password)) {
+            if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.,_-]{6,25}$/.test(password_hash.trim())) {
                 return res.status(400).json({
                     error: "La contraseña debe tener al menos 6 caracteres, incluyendo al menos una letra y un número"
                 });
@@ -30,7 +30,6 @@ export class UserController {
 
             const role_id = 2;
             const create_at = new Date();
-            const password_hash = password; 
 
             const user: Omit<User, "id_users"> = {
                 name,
@@ -104,7 +103,7 @@ export class UserController {
             const id = parseInt(req.params.id);
             if (isNaN(id)) return res.status(400).json({ error: "El id debe ser un número válido" });
 
-            const deleted = await this.app.deleteUser(id); // ✅ corregido: deleteuser → deleteUser
+            const deleted = await this.app.deleteUser(id);
             if (!deleted) {
                 return res.status(404).json({ error: "Usuario no encontrado" });
             }
@@ -119,7 +118,7 @@ export class UserController {
             const id = parseInt(req.params.id);
             if (isNaN(id)) return res.status(400).json({ error: "El id no es válido" });
 
-            const { name, email, password, role_id, create_at } = req.body;
+            const { name, email, password_hash, role_id, create_at } = req.body;
 
             if (name && !/^[A-Za-zÁÉÍÓÚáéíóúÑñ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúÑñ]+)?$/.test(name.trim()))
                 return res.status(400).json({ error: "El nombre no es válido" });
@@ -127,7 +126,7 @@ export class UserController {
             if (email && !/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email.trim()))
                 return res.status(400).json({ error: "Correo no válido" });
 
-            if (password && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,25}$/.test(password.trim()))
+            if (password_hash && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,25}$/.test(password_hash.trim()))
                 return res.status(400).json({
                     error: "La contraseña debe tener al menos 6 caracteres, incluyendo al menos una letra y un número"
                 });
@@ -141,7 +140,7 @@ export class UserController {
             const userUpdate: Partial<User> = {};
             if (name) userUpdate.name = name.trim();
             if (email) userUpdate.email = email.trim();
-            if (password) userUpdate.password_hash = password;
+            if (password_hash) userUpdate.password_hash = password_hash.trim();
             if (role_id) userUpdate.role_id = role_id;
             if (create_at) userUpdate.create_at = new Date(create_at);
 
