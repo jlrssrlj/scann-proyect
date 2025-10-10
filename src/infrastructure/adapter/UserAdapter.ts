@@ -12,10 +12,10 @@ export class UserAdapter implements UserPort{
     }
     private toDomain(user:UserEntity): userDomain{
         return{
-            id: user.id,
+            id_users: user.id_users,
             name: user.name,
             email: user.email,
-            password: user.password_hash,
+            password_hash: user.password_hash,
             create_at: user.created_at,
             role_id: user.role.id
 
@@ -25,7 +25,7 @@ export class UserAdapter implements UserPort{
         const userEntity = new UserEntity;
         userEntity.name = user.name;
         userEntity.email = user.email;
-        userEntity.password_hash = user.password;
+        userEntity.password_hash = user.password_hash;
         userEntity.created_at = user.create_at;
         userEntity.role= { id: user.role_id} as any
         return userEntity;
@@ -35,7 +35,7 @@ export class UserAdapter implements UserPort{
         try {
             const newUser = this.toEntity(user);
             const savedUser = await this.userRepository.save(newUser);
-            return savedUser.id;
+            return savedUser.id_users;
         } catch (error) {
             console.error("Error creando usuario")
             throw new Error("Erros creating users")
@@ -43,7 +43,7 @@ export class UserAdapter implements UserPort{
     }
     async getUserByid(id: number): Promise<userDomain | null> {
         try {
-            const user = await this.userRepository.findOne({where: {id:id}})
+            const user = await this.userRepository.findOne({where: {id_users:id}})
             return user ? this.toDomain(user): null;
         } catch (error) {
             console.error("error obteniendo usuario")
@@ -62,14 +62,14 @@ export class UserAdapter implements UserPort{
     }
     async updateUser(id: number, user: Partial<userDomain>): Promise<boolean> {
         try {
-            const existingUser = await this.userRepository.findOne({where:{id:id}})
+            const existingUser = await this.userRepository.findOne({where:{id_users:id}})
             if(!existingUser){
                 throw new Error("user not found")
             }
             Object.assign(existingUser,{
                 name: user.name ?? existingUser.name,
                 email: user.email ?? existingUser.email,
-                password_hash: user.password ?? existingUser.password_hash,
+                password_hash: user.password_hash ?? existingUser.password_hash,
                 created_at: user.create_at ?? existingUser.created_at,
                 role: user.role_id ? {id: user.role_id} as any: existingUser.role
             });

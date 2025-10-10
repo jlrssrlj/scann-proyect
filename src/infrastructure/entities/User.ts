@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Role } from "../entities/role";
 
-@Entity()
+@Entity({name: "users"})
 export class User {
     @PrimaryGeneratedColumn({ name: "id_user" })
-    id!: number;
+    id_users!: number;
 
     @Column({ type: "varchar", length: 255 })
     name!: string;

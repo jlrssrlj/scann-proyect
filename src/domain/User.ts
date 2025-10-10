@@ -1,9 +1,9 @@
 
 export interface User{
-    id:number;
+    id_users:number;
     name:string;
     email:string;
-    password:string;
+    password_hash:string;
     role_id:number;
     create_at:Date;
 }
