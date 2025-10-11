@@ -126,7 +126,7 @@ export class UserController {
             if (email && !/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email.trim()))
                 return res.status(400).json({ error: "Correo no válido" });
 
-            if (password_hash && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,25}$/.test(password_hash.trim()))
+            if (password_hash && !/^(?=.*[A-Za-z])(?=.*\d).{6,25}$/.test(password_hash.trim()))
                 return res.status(400).json({
                     error: "La contraseña debe tener al menos 6 caracteres, incluyendo al menos una letra y un número"
                 });

@@ -45,6 +45,13 @@ router.get("/users-email/:email", async(req, res) =>{
         
     }
 });
+router.put("/users/:id", async (req, res) => {
+    try {
+        await userController.updateUser(req, res);
+    } catch (error) {
+        res.status(400).json({ message: "Error al actualizar el usuario", error });
+    }
+});
 router.delete("/users/:id", async (req, res) => {
     try {
         await userController.deleteUser(req, res);
