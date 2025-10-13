@@ -3,6 +3,7 @@ import express from "express";
 import UserRoutes from "../routes/UserRoutes";
 import RoleRoutes from "../routes/RoleRoutes"; 
 import CategorieRoutes from "../routes/CategorieRoutes"
+import ProductsRoutes from "../routes/ProductsRoutes"
 
 class App {
   private app: express.Application;
@@ -20,7 +21,8 @@ class App {
   private routes(): void {
     this.app.use("/api", UserRoutes);
     this.app.use("/api", RoleRoutes);
-    this.app.use("/api", CategorieRoutes)
+    this.app.use("/api", CategorieRoutes);
+    this.app.use("/api", ProductsRoutes)
   }
 
   getApp() {

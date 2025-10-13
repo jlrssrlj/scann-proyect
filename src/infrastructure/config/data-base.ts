@@ -2,6 +2,8 @@ import { DataSource } from "typeorm";
 import { User } from "../entities/User";
 import { Role } from "../entities/role"
 import { CategoriesEntities } from "../entities/CategoriesEntities";
+import { ProductsEntities } from "../entities/ProductsEntities";
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -15,7 +17,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true, //solo en desarrollo, en prod usa migraciones
     logging: true,
-    entities: [User,Role, CategoriesEntities],
+    entities: [User,Role, CategoriesEntities, ProductsEntities],
 });
 
 // conectar a la bd
