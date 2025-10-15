@@ -1,9 +1,10 @@
 // app.ts
 import express from "express";
+import cors from "cors"; // 👈 importa cors
 import UserRoutes from "../routes/UserRoutes";
 import RoleRoutes from "../routes/RoleRoutes"; 
-import CategorieRoutes from "../routes/CategorieRoutes"
-import ProductsRoutes from "../routes/ProductsRoutes"
+import CategorieRoutes from "../routes/CategorieRoutes";
+import ProductsRoutes from "../routes/ProductsRoutes";
 
 class App {
   private app: express.Application;
@@ -16,13 +17,20 @@ class App {
 
   private middleware(): void {
     this.app.use(express.json());
+
+    
+    this.app.use(cors({
+      origin: "http://localhost:5173", // tu frontend
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true
+    }));
   }
 
   private routes(): void {
     this.app.use("/api", UserRoutes);
     this.app.use("/api", RoleRoutes);
     this.app.use("/api", CategorieRoutes);
-    this.app.use("/api", ProductsRoutes)
+    this.app.use("/api", ProductsRoutes);
   }
 
   getApp() {
@@ -31,6 +39,3 @@ class App {
 }
 
 export default new App().getApp();
-
-
-
