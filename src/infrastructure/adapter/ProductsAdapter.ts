@@ -17,7 +17,6 @@ export class ProductAdapter implements ProductsPort {
       id_products: product.id_products,
       name_products: product.name_products,
       description: product.description,
-      image_url: product.image_url,
       category: {
         id: product.category?.id_categories ?? null,
         name: product.category?.name_categories ?? "Sin categoría",
@@ -31,7 +30,6 @@ export class ProductAdapter implements ProductsPort {
     const productEntity = new ProductEntity();
     productEntity.name_products = product.name_products;
     productEntity.description = product.description;
-    productEntity.image_url = product.image_url;
     productEntity.created_at = product.created_at;
     // Guardamos solo la FK de la categoría
     productEntity.category = product.category?.id
@@ -71,7 +69,6 @@ export class ProductAdapter implements ProductsPort {
     Object.assign(existingProduct, {
       name_products: product.name_products ?? existingProduct.name_products,
       description: product.description ?? existingProduct.description,
-      image_url: product.image_url ?? existingProduct.image_url,
       created_at: product.created_at ?? existingProduct.created_at,
       category: product.category?.id
         ? ({ id_categories: product.category.id } as any)
