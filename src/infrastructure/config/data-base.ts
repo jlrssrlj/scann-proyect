@@ -5,6 +5,7 @@ import { CategoriesEntities } from "../entities/CategoriesEntities";
 import { ProductsEntities } from "../entities/ProductsEntities";
 
 import dotenv from "dotenv";
+import { ScanEntities } from "../entities/ScanEntities";
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true, //solo en desarrollo, en prod usa migraciones
     logging: true,
-    entities: [User,Role, CategoriesEntities, ProductsEntities],
+    entities: [User,Role, CategoriesEntities, ProductsEntities, ScanEntities],
 });
 
 // conectar a la bd
