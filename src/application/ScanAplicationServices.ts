@@ -21,7 +21,7 @@ export class ScanAplicationService {
 
     // Obtener todos los escaneos
     async getAllScans(): Promise<Scan[]> {
-        return await this.port.getAllScans();
+        return await this.port.getAllScan();
     }
 
     // Eliminar escaneo
