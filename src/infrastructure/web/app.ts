@@ -6,6 +6,7 @@ import RoleRoutes from "../routes/RoleRoutes";
 import CategorieRoutes from "../routes/CategorieRoutes";
 import ProductsRoutes from "../routes/ProductsRoutes";
 import ScansRoutes from "../routes/ScansRoutes";
+import ProductDetailsRoutes from "../routes/ProductDetailsRoutes"
 
 class App {
   private app: express.Application;
@@ -33,6 +34,7 @@ class App {
     this.app.use("/api", CategorieRoutes);
     this.app.use("/api", ProductsRoutes);
     this.app.use("/api", ScansRoutes);
+    this.app.use("/api", ProductDetailsRoutes);
   }
 
   getApp() {
