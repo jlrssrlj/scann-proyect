@@ -3,7 +3,7 @@ import { User } from "../entities/User";
 import { Role } from "../entities/role"
 import { CategoriesEntities } from "../entities/CategoriesEntities";
 import { ProductsEntities } from "../entities/ProductsEntities";
-
+import { ProductDetailsEntity } from "../entities/ProducDetailsEntities";
 import dotenv from "dotenv";
 import { ScanEntities } from "../entities/ScanEntities";
 
@@ -18,7 +18,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true, //solo en desarrollo, en prod usa migraciones
     logging: true,
-    entities: [User,Role, CategoriesEntities, ProductsEntities, ScanEntities],
+    entities: [User,Role, CategoriesEntities, ProductsEntities, ScanEntities, ProductDetailsEntity],
 });
 
 // conectar a la bd
