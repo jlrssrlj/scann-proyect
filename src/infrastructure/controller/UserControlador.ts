@@ -9,6 +9,38 @@ export class UserController {
         this.app = app;
     }
 
+    // ✅ Nuevo método de login
+    async login(req: Request, res: Response): Promise<Response> {
+        try {
+            const { email, password } = req.body;
+
+            if (!email || !password) {
+                return res.status(400).json({ error: "Correo y contraseña son obligatorios" });
+            }
+
+            const user = await this.app.login(email.trim(), password.trim());
+
+            if (!user) {
+                return res.status(401).json({ error: "Credenciales incorrectas" });
+            }
+
+            return res.status(200).json({
+                message: "Inicio de sesión exitoso",
+                user: {
+                    id: user.id_users,
+                    name: user.name,
+                    email: user.email,
+                    role_id: user.role_id,
+                }
+            });
+        } catch (error) {
+            if (error instanceof Error) {
+                return res.status(500).json({ error: "Error en el servidor", details: error.message });
+            }
+            return res.status(500).json({ error: "Error en el servidor" });
+        }
+    }
+
     async createUser(req: Request, res: Response): Promise<Response> {
         const { name, email, password_hash } = req.body;
 

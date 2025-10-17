@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import {  Shield, Layers } from "lucide-react";
+import { Shield, Layers } from "lucide-react";
 
 const links = [
-  { to: "/roles", label: "Roles", icon: Shield },
-  { to: "/categorias", label: "Categorías", icon: Layers },
+  { to: "/dashboard/roles", label: "Roles", icon: Shield },
+  { to: "/dashboard/categorias", label: "Categorías", icon: Layers },
 ];
 
 export default function Sidebar() {
@@ -16,7 +16,7 @@ export default function Sidebar() {
         SCANN PRO
       </h1>
 
-      
+      {/* Navegación */}
       <nav className="flex-1 mt-4">
         {links.map(({ to, label, icon: Icon }) => {
           const active = location.pathname === to;
@@ -38,7 +38,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      
+      {/* Footer */}
       <div className="text-center py-4 text-sm text-gray-500 border-t border-cyan-400/10">
         © 2025 SCANN PRO
       </div>

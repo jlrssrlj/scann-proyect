@@ -7,4 +7,5 @@ export interface UserPort {
     updateUser(id: number, user: Partial<User>): Promise<boolean>;
     deleteUser(id: number): Promise<boolean>;
     getAllUser(): Promise<User[]>;
+    login(email: string, password: string): Promise<User | null>;
 }

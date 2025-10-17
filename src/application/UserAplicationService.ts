@@ -51,4 +51,20 @@ export class UserAplicationService {
         }
         return await this.port.deleteUser(id);
     }
+
+    /** 🔐 Nuevo método de login */
+    async login(email: string, password: string): Promise<User | null> {
+        const user = await this.port.getUserByemail(email);
+
+        if (!user) {
+            throw new Error("Usuario no encontrado");
+        }
+
+        // Comparación simple (sin hash, puedes añadir bcrypt luego)
+        if (user.password_hash !== password) {
+            throw new Error("Contraseña incorrecta");
+        }
+
+        return user; // Devuelve el usuario autenticado
+    }
 }
