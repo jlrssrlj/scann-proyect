@@ -17,7 +17,7 @@ export class User {
 
     // Relación con roles
     @ManyToOne(() => Role, (role) => role.users, { eager: true }) 
-    @JoinColumn({ name: "role_id" }) // FK en la tabla users
+    @JoinColumn({ name: "role_id" }) 
     role!: Role;
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
