@@ -2,8 +2,33 @@ import axios from "axios";
 
 const API_URL = "http://localhost:4000/api/roles";
 
-export const getRoles = async () => axios.get(API_URL);
-export const getRoleById = async (id: number) => axios.get(`${API_URL}/${id}`);
-export const createRole = async (data: { name: string }) => axios.post(API_URL, data);
-export const updateRole = async (id: number, data: { name: string }) => axios.put(`${API_URL}/${id}`, data);
-export const deleteRole = async (id: number) => axios.delete(`${API_URL}/${id}`);
+export interface Role {
+  id_roles: number;
+  name: string;
+  created_at: string;
+}
+
+// ✅ Obtener todos los roles
+export const getRoles = async () => {
+  return axios.get<Role[]>(API_URL);
+};
+
+// ✅ Obtener un rol por ID
+export const getRoleById = async (id: number) => {
+  return axios.get<Role>(`${API_URL}/${id}`);
+};
+
+// ✅ Crear rol
+export const createRole = async (data: { name: string }) => {
+  return axios.post<Role>(API_URL, data);
+};
+
+// ✅ Actualizar rol
+export const updateRole = async (id: number, data: { name: string }) => {
+  return axios.put<Role>(`${API_URL}/${id}`, data);
+};
+
+// ✅ Eliminar rol
+export const deleteRole = async (id: number) => {
+  return axios.delete(`${API_URL}/${id}`);
+};

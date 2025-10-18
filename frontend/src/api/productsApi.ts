@@ -39,5 +39,5 @@ export const getProducts = () => axios.get(API_URL);
 // Obtener producto por ID
 export const getProductById = (id: number) => axios.get(`${API_URL}/${id}`);
 
-// Eliminar producto por ID
+// Eliminar producto 
 export const deleteProduct = (id: number) => axios.delete(`${API_URL}/${id}`);

@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import RoleList from "./components/RoleList";
 import CategoriaList from "./components/CategoriaList";
 import ProductosList from "./components/ProductosList";
+import UsuariosList from "./components/UsuariosList";
 import type { JSX } from "react";
 
 function RequireAuth({ children }: { children: JSX.Element }) {
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="roles" element={<RoleList />} />
           <Route path="categorias" element={<CategoriaList />} />
           <Route path="productos" element={<ProductosList />} />
+          <Route path="usuarios" element={<UsuariosList />} />
         </Route>
 
         {/* Ruta fallback */}
