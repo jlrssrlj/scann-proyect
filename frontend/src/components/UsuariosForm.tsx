@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { createUser, updateUser, getUserById } from "../api/usuariosApi";
-import { getRoles, type Role } from "../api/rolesApi";
+import { getRoles } from "../api/rolesApi";
 import type { User } from "../api/usuariosApi";
 
 interface UsuariosFormProps {
   userId: number | null;
   onClose: () => void;
   onSaved: () => void;
+}
+
+interface Role {
+  id_roles: number;
+  name_roles: string;
 }
 
 export default function UsuariosForm({ userId, onClose, onSaved }: UsuariosFormProps) {
@@ -17,24 +22,20 @@ export default function UsuariosForm({ userId, onClose, onSaved }: UsuariosFormP
   const [roles, setRoles] = useState<Role[]>([]);
 
   useEffect(() => {
-    getRoles().then((res) => {
-      setRoles(res.data.roles || []);
-    });
+  getRoles().then((res) => {
+    setRoles(res.data.roles || []);
+  });
 
-    if (userId) {
-      getUserById(userId).then((res) => {
-        const u = res.data;
-        setName(u.name);
-        setEmail(u.email);
-        setRoleId(u.role_id);
-      });
-    } else {
-      setName("");
-      setEmail("");
-      setPassword("");
-      setRoleId(null);
-    }
-  }, [userId]);
+  if (userId) {
+    getUserById(userId).then((res) => {
+      const u = res.data; // 👈 aquí va el cambio
+      setName(u.name);
+      setEmail(u.email);
+      setRoleId(u.role_id);
+    });
+  }
+}, [userId]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +53,7 @@ export default function UsuariosForm({ userId, onClose, onSaved }: UsuariosFormP
     if (userId) {
       await updateUser(userId, payload);
     } else {
-      await createUser(payload as Omit<User, "id_users" | "create_at" | "password_hash"> & { password: string });
+      await createUser(payload as Omit<User, "id_users" | "created_at" | "password_hash"> & { password: string });
     }
 
     onSaved();
