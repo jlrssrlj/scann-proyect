@@ -1,43 +1,30 @@
-// frontend/src/api/productsApi.ts
+// src/api/productsApi.ts
+import axios from "axios";
+
+const API_URL = "http://localhost:3000/api/products"; // Ajusta el puerto si es distinto
+
 export interface Product {
   id_products: number;
   name_products: string;
-  category_name: string;
-  image_url: string;
+  description: string;
+  category_id: number | null;
+  created_at: string;
+  image_url: string | null;
 }
 
-// Cambia esta URL base por la de tu backend
-const API_URL = "http://localhost:3000/api/products";
+// Obtener todos los productos
+export const getProducts = () => axios.get(API_URL);
 
-export const getProducts = async (): Promise<Product[]> => {
-  const res = await fetch(API_URL);
-  if (!res.ok) throw new Error("Error al obtener productos");
-  return res.json();
-};
+// Obtener un producto por ID
+export const getProductById = (id: number) => axios.get(`${API_URL}/${id}`);
 
-export const createProduct = async (product: Omit<Product, "id_products">): Promise<Product> => {
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(product),
-  });
-  if (!res.ok) throw new Error("Error al crear producto");
-  return res.json();
-};
+// Crear un nuevo producto
+export const createProduct = (productData: Omit<Product, "id_products" | "created_at">) =>
+  axios.post(API_URL, productData);
 
-export const updateProduct = async (id: number, product: Partial<Product>): Promise<Product> => {
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(product),
-  });
-  if (!res.ok) throw new Error("Error al actualizar producto");
-  return res.json();
-};
+// Actualizar un producto existente
+export const updateProduct = (id: number, productData: Partial<Product>) =>
+  axios.put(`${API_URL}/${id}`, productData);
 
-export const deleteProduct = async (id: number): Promise<void> => {
-  const res = await fetch(`${API_URL}/${id}`, {
-    method: "DELETE",
-  });
-  if (!res.ok) throw new Error("Error al eliminar producto");
-};
+// Eliminar un producto
+export const deleteProduct = (id: number) => axios.delete(`${API_URL}/${id}`);

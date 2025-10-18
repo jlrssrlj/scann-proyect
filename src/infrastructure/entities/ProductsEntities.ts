@@ -10,14 +10,14 @@ export class ProductsEntities {
   name_products!: string;
 
   @Column({ type: "text", nullable: true })
-  description!: string;
+  description?: string;  // ← opcional
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  image_url!: string;
+  image_url?: string;    // ← opcional
 
-  @ManyToOne(() => CategoriesEntities)
+  @ManyToOne(() => CategoriesEntities, { nullable: true })
   @JoinColumn({ name: "category_id" })
-  category!: CategoriesEntities;
+  category?: CategoriesEntities | null;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at!: Date;

@@ -4,6 +4,7 @@ import { Shield, Layers } from "lucide-react";
 const links = [
   { to: "/dashboard/roles", label: "Roles", icon: Shield },
   { to: "/dashboard/categorias", label: "Categorías", icon: Layers },
+  { to: "/dashboard/productos", label: "Productos", icon: Layers },
 ];
 
 export default function Sidebar() {
