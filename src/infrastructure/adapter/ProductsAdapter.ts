@@ -18,11 +18,10 @@ export class ProductAdapter implements ProductsPort {
       name_products: product.name_products,
       description: product.description,
       image_url: product.image_url,
-      category: {
-        id: product.category?.id_categories ?? null,
-        name: product.category?.name_categories ?? "Sin categoría",
-      },
       created_at: product.created_at,
+      category: product.category
+        ? { id: product.category.id_categories, name: product.category.name_categories }
+        : null,
     };
   }
 
@@ -35,8 +34,8 @@ export class ProductAdapter implements ProductsPort {
     productEntity.created_at = product.created_at;
     // Guardamos solo la FK de la categoría
     productEntity.category = product.category?.id
-      ? ({ id_categories: product.category.id } as any)
-      : undefined;
+      ? { id_categories: product.category.id } as ProductEntity["category"]
+      : null;
     return productEntity;
   }
 
@@ -55,28 +54,29 @@ export class ProductAdapter implements ProductsPort {
   }
 
   async getAllProducts(): Promise<ProductDomain[]> {
-    const products = await this.productRepository.find({
-      relations: ["category"],
-    });
+    const products = await this.productRepository.find({ relations: ["category"] });
     return products.map((p) => this.toDomain(p));
   }
 
-  async updateProduct(id: number, product: Partial<ProductDomain>): Promise<boolean> {
+  async updateProduct(id: number, product: Partial<ProductDomain> & { category_id?: number | null }): Promise<boolean> {
     const existingProduct = await this.productRepository.findOne({
       where: { id_products: id },
       relations: ["category"],
     });
-    if (!existingProduct) throw new Error("Product not found");
+    if (!existingProduct) throw new Error("Producto no encontrado");
 
-    Object.assign(existingProduct, {
-      name_products: product.name_products ?? existingProduct.name_products,
-      description: product.description ?? existingProduct.description,
-      image_url: product.image_url ?? existingProduct.image_url,
-      created_at: product.created_at ?? existingProduct.created_at,
-      category: product.category?.id
-        ? ({ id_categories: product.category.id } as any)
-        : existingProduct.category,
-    });
+    // Actualizamos campos básicos
+    existingProduct.name_products = product.name_products ?? existingProduct.name_products;
+    existingProduct.description = product.description ?? existingProduct.description;
+    existingProduct.image_url = product.image_url ?? existingProduct.image_url;
+    existingProduct.created_at = product.created_at ?? existingProduct.created_at;
+
+    // Actualizamos categoría correctamente
+    if (product.category_id !== undefined) {
+      existingProduct.category = product.category_id
+        ? { id_categories: product.category_id } as ProductEntity["category"]
+        : null;
+    }
 
     await this.productRepository.save(existingProduct);
     return true;

@@ -1,4 +1,3 @@
-// src/components/ProductosList.tsx
 import { useEffect, useState } from "react";
 import { getProducts, deleteProduct, type Product } from "../api/productsApi";
 import ProductosForm from "./ProductosForm";
@@ -11,7 +10,8 @@ export default function ProductosList() {
   const loadProducts = () => {
     getProducts()
       .then((res) => {
-        setProducts(res.data.products || []);
+        const data = res.data.products || res.data || [];
+        setProducts(data);
       })
       .catch((err) => console.error("Error al cargar productos:", err));
   };
@@ -70,7 +70,12 @@ export default function ProductosList() {
                     className="mx-auto rounded-lg mb-3 max-h-40 object-cover"
                   />
                 )}
-                <p className="text-gray-500 text-xs mb-4">ID: {p.id_products}</p>
+                <p className="text-gray-400 text-sm mb-2">
+                  Categoría: {p.category ? p.category.name_categories : "Sin categoría"}
+                </p>
+                <p className="text-gray-500 text-xs mb-4">
+                  ID: {p.id_products}
+                </p>
 
                 <div className="flex justify-center gap-3">
                   <button

@@ -1,5 +1,4 @@
-// src/components/ProductosForm.tsx
-import { useEffect, useState } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { createProduct, updateProduct, getProductById } from "../api/productsApi";
 import { getCategories } from "../api/categorias";
 
@@ -15,48 +14,76 @@ interface Category {
 }
 
 export default function ProductosForm({ productId, onClose, onSaved }: ProductosFormProps) {
-  const [name, setName] = useState("");
+  const [name_products, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [image_url, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [imageUrl, setImageUrl] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  // Cargar categorías
   useEffect(() => {
-    getCategories().then((res) => {
-      setCategories(res.data.categorie || []);
-    });
+    getCategories()
+      .then((res) => {
+        setCategories(res.data.categorie || []);
+      })
+      .catch((err) => console.error("Error cargando categorías:", err));
+  }, []);
 
+  // Cargar producto si se edita
+  useEffect(() => {
     if (productId) {
-      getProductById(productId).then((res) => {
-        const p = res.data.product;
-        setName(p.name_products);
-        setDescription(p.description);
-        setCategoryId(p.category_id);
-        setImageUrl(p.image_url || "");
-      });
+      setLoading(true);
+      getProductById(productId)
+        .then((res) => {
+          const p = res.data;
+          setName(p.name_products || "");
+          setDescription(p.description || "");
+          setImageUrl(p.image_url || "");
+          setCategoryId(p.category?.id ?? null);
+        })
+        .catch((err) => console.error("Error cargando producto:", err))
+        .finally(() => setLoading(false));
+    } else {
+      setName("");
+      setDescription("");
+      setImageUrl("");
+      setCategoryId(null);
     }
   }, [productId]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Guardar o actualizar producto
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const payload = {
-      name_products: name,
+
+    const productData = {
+      name_products,
       description,
+      image_url: image_url || null,
       category_id: categoryId,
-      image_url: imageUrl || null,
     };
 
-    if (productId) {
-      await updateProduct(productId, payload);
-    } else {
-      await createProduct(payload);
+    try {
+      if (productId) {
+        await updateProduct(productId, productData);
+        alert("Producto actualizado correctamente");
+      } else {
+        await createProduct(productData);
+        alert("Producto creado correctamente");
+      }
+
+      onSaved(); // Refresca la lista de productos
+      onClose();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      alert(`Error guardando producto: ${err.message}`);
     }
-    onSaved();
-    onClose();
   };
 
+  if (loading) return <p className="text-white">Cargando producto...</p>;
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-xl w-96 text-center"
@@ -67,40 +94,42 @@ export default function ProductosForm({ productId, onClose, onSaved }: Productos
 
         <input
           type="text"
-          placeholder="Nombre"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={name_products}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          placeholder="Nombre del producto"
           required
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4 text-black"
         />
 
         <textarea
-          placeholder="Descripción"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.target.value)}
+          placeholder="Descripción"
           required
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4 text-black"
         />
 
         <select
           value={categoryId ?? ""}
-          onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : null)}
-          className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+            setCategoryId(e.target.value ? parseInt(e.target.value) : null)
+          }
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4 text-black bg-white"
         >
           <option value="">Sin categoría</option>
-          {categories.map((cat) => (
-            <option key={cat.id_categories} value={cat.id_categories}>
-              {cat.name_categories}
+          {categories.map((c) => (
+            <option key={c.id_categories} value={c.id_categories}>
+              {c.name_categories}
             </option>
           ))}
         </select>
 
         <input
           type="text"
-          placeholder="URL de imagen (opcional)"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4"
+          value={image_url}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setImageUrl(e.target.value)}
+          placeholder="URL de la imagen (opcional)"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4 text-black"
         />
 
         <div className="flex justify-center gap-3">
